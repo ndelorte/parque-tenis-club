@@ -1,11 +1,24 @@
+import { useState } from 'react';
+import Modal from '../components/Modal';
+
+
+
 export default function Home() {
+    const [isOpen, setIsOpen] = useState(false);
+     const [modalInfo, setModalInfo] = useState({ title: '', description: '' });
+
+    const abrirModal = (titulo, descripcion) => {
+      setModalInfo({ title: titulo, description: descripcion });
+     setIsOpen(true);
+
+  };
     return (
-        <div className="space-y-20">
+        <div className=" space-y-20">
             {/* HERO */}
             <section className="relative h-screen flex items-center justify-center text-white">
                 {/* Imagen de fondo */}
                 <img
-                    src="/fondo-parque.jpeg"
+                    src="/fondo3.jpeg"
                     alt="Cancha de tenis"
                     className="absolute inset-0 w-full h-full object-cover z-0"
                 />
@@ -20,27 +33,33 @@ export default function Home() {
                     </h1>
                     <p className="mb-6 text-lg">Formamos jugadores, creamos comunidad.</p>
                     <a
-                        href="#entrenamiento"
+                        href="#novedades"
                         className="bg-secondary hover:bg-accent text-white font-semibold py-2 px-4 rounded transition"
                     >
-                        Conocé nuestro entrenamiento
+                        Conocé las últimas noticias
                     </a>
                 </div>
             </section>
 
             {/* NOVEDADES */}
-            <section id="novedades" className="container mx-auto px-4">
+            <section id="novedades" className="container mx-auto px-4 py-20">
                 <h2 className="text-3xl font-bold mb-6 text-primary">Últimas novedades</h2>
                 <p className="text-neutral">Acá irían las noticias más recientes del club.</p>
             </section>
 
             {/* ENTRENAMIENTO */}
-            <section id="entrenamiento" className="container mx-auto px-4 py-20">
+            <section id="entrenamiento" className=" container mx-auto px-4">
                 <h2 className="text-3xl font-bold mb-12 text-center text-primary">Entrenamiento</h2>
 
                 <div className="grid md:grid-cols-3 gap-10">
                     {/* ESCUELITA */}
-                    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-2xl hover:scale-105 transform transition-transform duration-300">
+                    <div 
+            onClick={() =>
+              abrirModal(
+                'Escuelita',
+                'Entrenamiento para chicos/as desde los 5 años. Nivelación, juegos, técnica y trabajo en equipo.'
+              )
+            }className="cursor-pointer bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl hover:scale-105 transform transition-transform duration-300 text-black">
                         <img src="/fondo-escuelita.jpeg" alt="Escuelita de tenis" className="w-full h-52 object-cover" />
                         <div className="p-6">
                             <h3 className="text-xl font-semibold text-primary mb-2">Escuelita</h3>
@@ -49,8 +68,15 @@ export default function Home() {
                     </div>
 
                     {/* ADULTOS */}
-                    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-2xl hover:scale-105 transform transition-transform duration-300">
-                        <img src="/fondo-entrenamiento.jpeg" alt="Clases para adultos" className="w-full h-52 object-cover" />
+          <div
+            onClick={() =>
+              abrirModal(
+                'Adultos',
+                'Clases grupales o individuales, organizadas por niveles (iniciación, intermedios, avanzados).'
+              )
+            }
+            className="cursor-pointer bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl hover:scale-105 transform transition-transform duration-300 text-black"
+          >                        <img src="/fondo-entrenamiento.jpeg" alt="Clases para adultos" className="w-full h-52 object-cover" />
                         <div className="p-6">
                             <h3 className="text-xl font-semibold text-primary mb-2">Adultos</h3>
                             <p className="text-neutral">Grupos de iniciación, intermedios y avanzados. Clases en horarios flexibles. Preparación física y técnica adaptada.</p>
@@ -58,14 +84,23 @@ export default function Home() {
                     </div>
 
                     {/* COMPETENCIA */}
-                    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-2xl hover:scale-105 transform transition-transform duration-300">
-                        <img src="/fondo-entrenaequipos.jpeg" alt="Entrenamiento de competencia" className="w-full h-52 object-cover" />
+<div
+            onClick={() =>
+              abrirModal(
+                'Competencia',
+                'Entrenamiento técnico, táctico y físico para jugadores federados y en competencia activa.'
+              )
+            }
+            className="cursor-pointer bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl hover:scale-105 transform transition-transform duration-300 text-black"
+          >                        <img src="/fondo-entrenaequipos.jpeg" alt="Entrenamiento de competencia" className="w-full h-52 object-cover" />
                         <div className="p-6">
                             <h3 className="text-xl font-semibold text-primary mb-2">Competencia</h3>
                             <p className="text-neutral">Entrenamiento intensivo para jugadores federados e interclubes. Planificación táctica, física y técnica. Seguimiento personalizado.</p>
                         </div>
                     </div>
                 </div>
+                {/* Modal visible en toda la sección */}
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen} title={modalInfo.title} description={modalInfo.description} />
             </section>
 
             {/* EQUIPOS */}
@@ -73,6 +108,7 @@ export default function Home() {
                 <h2 className="text-3xl font-bold mb-6 text-primary">Nuestros equipos</h2>
                 <p className="text-neutral">Jugadores federados, interclubes y escuelita.</p>
             </section>
+
         </div>
     );
 }
