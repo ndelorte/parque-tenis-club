@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import Modal from '../components/Modal';
+import EquipoCarousel from '../components/EquipoCarousel'
+
 
 
 
@@ -104,10 +106,16 @@ export default function Home() {
             </section>
 
             {/* EQUIPOS */}
-            <section id="equipos" className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold mb-6 text-primary">Nuestros equipos</h2>
-                <p className="text-neutral">Jugadores federados, interclubes y escuelita.</p>
-            </section>
+<section id="equipos" className="bg-white py-16">
+  <div className="text-center mb-6">
+    <h2 className="text-3xl font-bold text-primary">Nuestros Equipos</h2>
+    <p className="text-gray-600 mt-2">Mirá todos los equipos representativos del club</p>
+  </div>
+
+  <div className="max-w-5xl mx-auto px-4">
+    <EquipoCarousel />
+  </div>
+</section>
 
         </div>
     );
