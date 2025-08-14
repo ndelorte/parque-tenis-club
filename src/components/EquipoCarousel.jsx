@@ -1,20 +1,26 @@
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination } from 'swiper/modules'
+
 import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
+
 
 const equipos = [
-  { id: 1, nombre: 'Copa Amistad +14 A Caballeros', foto: '/equipo14cab.jpg' },
-  { id: 2, nombre: 'Copa Amistad +14 A Damas', foto: '/equipo14damas.jpg' },
-  { id: 3, nombre: 'Copa Amistad +25 B1 Damas', foto: '/equipo25damas.jpg' },
-  { id: 4, nombre: 'Copa Amistad +25 B2 Damas', foto: '/equipo25damas2.jpg' },
-  { id: 5, nombre: 'Intercountry +45 Caballeros', foto: '/equipointercab.jpg' },
-  { id: 6, nombre: 'Torneo de Veteranas', foto: '/equipoveteranas.jpg' },
+  { id: 1, nombre: 'Copa Amistad +14 A Caballeros', foto: '/equipo14cab.jpeg' },
+  { id: 2, nombre: 'Copa Amistad +14 A Damas', foto: '/equipo14damas.jpeg' },
+  { id: 3, nombre: 'Copa Amistad +25 B1 Damas', foto: '/equipo25damas.jpeg' },
+  { id: 4, nombre: 'Copa Amistad +25 B2 Damas', foto: '/equipo25damas2.jpeg' },
+  { id: 5, nombre: 'Intercountry +45 Caballeros', foto: '/equipointercab.jpeg' },
+  { id: 6, nombre: 'Torneo de Veteranas', foto: '/equipoveteranas.jpeg' },
   
 ]
 
 export default function EquipoCarousel() {
   return (
     <Swiper
-      modules={[Pagination]}
+      modules={[Navigation, Pagination]}
+      navigation
       pagination={{ clickable: true }}
       spaceBetween={20}
       slidesPerView={1}

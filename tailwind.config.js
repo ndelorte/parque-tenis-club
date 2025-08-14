@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+    serif: ['"Libre Baskerville"', 'serif'],
+  },
       animation: {
         'fade-in-up': 'fadeInUp 0.6s ease-out',
       },

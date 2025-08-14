@@ -11,15 +11,12 @@ export default function Navbar() {
 
         {/* Menú */}
         <div className="hidden md:flex gap-6 items-center">
-          <NavLink to="/" className={({ isActive }) => isActive ? 'text-accent font-semibold' : 'hover:text-accent transition'}>
-            Inicio
-          </NavLink>
-          <NavLink to="/entrenamiento" className="hover:text-accent transition">
+          <a href="#entrenamiento" className="hover:text-accent transition">
             Entrenamiento
-          </NavLink>
-          <NavLink to="/equipos" className="hover:text-accent transition">
+          </a>
+          <a href="#equipos" className="hover:text-accent transition">
             Equipos
-          </NavLink>
+          </a>
           <NavLink to="/torneo" className="hover:text-accent transition">
             Torneo Interno
           </NavLink>
@@ -28,10 +25,6 @@ export default function Navbar() {
           </NavLink>
         </div>
 
-        {/* CTA / Acción destacada */}
-        <Link to="/reserva" className="hidden md:inline-block bg-secondary text-white px-4 py-2 rounded hover:bg-accent hover:text-neutral transition">
-          Reservá tu cancha
-        </Link>
 
         {/* Mobile menu toggle (placeholder) */}
         <div className="md:hidden">

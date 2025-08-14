@@ -15,7 +15,7 @@ export default function Home() {
 
   };
     return (
-        <div className=" space-y-20">
+        <div>
             {/* HERO */}
             <section className="relative h-screen flex items-center justify-center text-white">
                 {/* Imagen de fondo */}
@@ -43,11 +43,23 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* NOVEDADES */}
-            <section id="novedades" className="container mx-auto px-4 py-20">
-                <h2 className="text-3xl font-bold mb-6 text-primary">Últimas novedades</h2>
-                <p className="text-neutral">Acá irían las noticias más recientes del club.</p>
-            </section>
+<section id="ubicacion" className="py-16">
+  <div className="container mx-auto px-4">
+    <h2 className="text-3xl font-bold text-center text-primary mb-8">¿Cómo llegar al club?</h2>
+    <div className="w-full h-[400px] rounded-xl overflow-hidden shadow-md">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3279.1247322578806!2d-58.240086!3d-34.7272502!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32e5223b0926f%3A0x468799f47d90418a!2sParque%20Tenis!5e0!3m2!1ses!2sar!4v1753202958638!5m2!1ses!2sar"
+        width="100%"
+        height="100%"
+        style={{ border: 0 }}
+        allowFullScreen
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+  </div>
+</section>
+
 
             {/* ENTRENAMIENTO */}
             <section id="entrenamiento" className=" container mx-auto px-4">
@@ -106,7 +118,7 @@ export default function Home() {
             </section>
 
             {/* EQUIPOS */}
-<section id="equipos" className="bg-white py-16">
+<section id="equipos" className=" py-16">
   <div className="text-center mb-6">
     <h2 className="text-3xl font-bold text-primary">Nuestros Equipos</h2>
     <p className="text-gray-600 mt-2">Mirá todos los equipos representativos del club</p>
@@ -116,6 +128,11 @@ export default function Home() {
     <EquipoCarousel />
   </div>
 </section>
+            {/* NOVEDADES */}
+            <section id="novedades" className="container mx-auto px-4 py-20">
+                <h2 className="text-3xl font-bold mb-6 text-primary">Últimas novedades</h2>
+                <p className="text-neutral">Acá irían las noticias más recientes del club.</p>
+            </section>
 
         </div>
     );
