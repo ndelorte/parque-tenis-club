@@ -7,23 +7,28 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-    serif: ['"Libre Baskerville"', 'serif'],
-  },
-      animation: {
-        'fade-in-up': 'fadeInUp 0.6s ease-out',
-      },
-      keyframes:{
-        fadeInUp: {
-          '0%': {opacity: 0, transform: 'translateY(20px)'},
-          '100%': {opacity: 1, transform: 'translateY(0)'},
-        },
+        serif: ['"Libre Baskerville"', 'serif'],
       },
       colors: {
-        primary: "#A65218",     // Marrón rojizo del logo
-        secondary: "#5B8548",   // Verde césped del logo
-        accent: "#D9E4D1",      // Verde pastel claro (contraste suave)
-        neutral: "#222222",     // Negro suave para textos
-        beige: "#BBBDA0",       // Fondo cálido, tipo papel
+        primary: "#A65218",
+        secondary: "#5B8548",
+        accent: "#D9E4D1",
+        neutral: "#222222",
+        beige: "#BBBDA0",
+      },
+      animation: {
+        'fade-in-up': 'fadeInUp 0.6s ease-out',
+        'fade-in': 'fadeIn 0.3s ease-out forwards',
+      },
+      keyframes: {
+        fadeInUp: {
+          '0%': { opacity: 0, transform: 'translateY(20px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
+        fadeIn: {
+          '0%': { opacity: 0, transform: 'translateY(-10px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
       },
     },
   },
