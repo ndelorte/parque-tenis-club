@@ -48,6 +48,9 @@ export default function Navbar() {
             <NavLink to="/contacto" className="hover:text-accent transition">
               Contacto
             </NavLink>
+                        <NavLink to="/LigaVeranoInvierno" className="hover:text-accent transition">
+              Liga de Verano-Invierno
+            </NavLink>
           </div>
 
 

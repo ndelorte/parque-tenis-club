@@ -3,6 +3,7 @@ import Layout from './layout/Layout.jsx';
 import Home from './pages/Home.jsx';
 import Torneo from './pages/Torneo.jsx';
 import Contacto from './pages/Contacto.jsx';
+import LigaVeranoInvierno from './pages/LigaVeranoInvierno.jsx';
 
 
 
@@ -14,6 +15,7 @@ function App() {
     <Route index element={<Home />} />
     <Route path="torneo" element={<Torneo />} />
     <Route path="contacto" element={<Contacto />} />
+    <Route path="ligaveranoinvierno" element={<LigaVeranoInvierno />} />
     </Route>
     </Routes>
     {/*boton wsp */}
