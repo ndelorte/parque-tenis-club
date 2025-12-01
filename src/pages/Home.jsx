@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Modal from '../components/Modal';
-import EquipoCarousel from '../components/EquipoCarousel'
+import EquipoCarousel from '../components/EquipoCarousel';
+import NovedadesSection from '../components/NovedadesSection';
 
 
 
@@ -27,19 +28,34 @@ export default function Home() {
 
         {/* Overlay oscuro */}
         <div className="absolute inset-0 bg-black/60 z-10"></div>
-
         {/* Contenido encima */}
         <div className="relative z-20 text-center max-w-xl p-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Bienvenidos a Parque Tenis Club
           </h1>
           <p className="mb-6 text-lg">Formamos jugadores, creamos comunidad.</p>
-          <a
-            href="#novedades"
-            className="bg-secondary hover:bg-accent text-white font-semibold py-2 px-4 rounded transition"
-          >
-            Conocé las últimas noticias
-          </a>
+
+          {/* <CHANGE> Agregué wrapper con flex-col y gap para apilar los botones */}
+          <div className="flex flex-col md:flex-row gap-3 items-center justify-center">
+            <a
+              href="#novedades"
+              className="bg-secondary hover:bg-accent text-white font-semibold py-2 px-4 rounded transition"
+            >
+              Conocé las últimas noticias
+            </a>
+            <a
+              href="#entrenamiento"
+              className="bg-secondary hover:bg-accent text-white font-semibold py-2 px-4 rounded transition"
+            >
+              Entrená con nosotros
+            </a>
+            <a
+              href="#equipos"
+              className="bg-secondary hover:bg-accent text-white font-semibold py-2 px-4 rounded transition"
+            >
+              Conocé nuestros equipos
+            </a>
+          </div>
         </div>
       </section>
 
@@ -129,10 +145,7 @@ export default function Home() {
         </div>
       </section>
       {/* NOVEDADES */}
-      <section id="novedades" className="container mx-auto px-4 py-20">
-        <h2 className="text-3xl font-bold mb-6 text-primary">Últimas novedades</h2>
-        <p className="text-neutral">Acá irían las noticias más recientes del club.</p>
-      </section>
+      <NovedadesSection />
 
     </div>
   );
