@@ -41,7 +41,7 @@ router.post("/", requireAdmin, uploadDisk.single("image"), async (req, res) => {
       isPublished: typeof isPublished === "boolean" ? isPublished : true,
     })
 
-    console.log("Noticia creada exitosamente:", created._id)
+    console.log("Noticia creada exitosamente", created._id)
     res.status(201).json(created)
   } catch (error) {
     console.error("Error al crear noticia:", error)
