@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
 import mongoose from "mongoose"
+import path from "path"
 import { sessionMiddleware } from "./config/session.js"
 import adminAuthRoutes from "./routes/adminAuth.js"
 import { requireAdmin } from "./middlewares/requireAdmin.js"
@@ -22,7 +23,7 @@ app.use(express.json())
 app.use(sessionMiddleware)
 app.use("/admin", adminAuthRoutes)
 app.use("/api/news", newsRoutes)
-app.use("/uploads", express.static(path.join(path.cwd(), 'uploads')));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
 
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, message: "API Parque Tenis Club funcionando" })
