@@ -10,6 +10,7 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [modalInfo, setModalInfo] = useState({ title: '', description: '' });
 
+
   const abrirModal = (titulo, descripcion) => {
     setModalInfo({ title: titulo, description: descripcion });
     setIsOpen(true);

@@ -1,57 +1,40 @@
 // components/NovedadesSection.jsx
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-// Datos de ejemplo - después se reemplazan con datos de la base de datos
-const noticiasEjemplo = [
-  {
-    id: 1,
-    titulo: "Torneo Abierto de Verano 2025",
-    descripcion: "Inscripciones abiertas para el torneo de verano. Categorías desde Sub-12 hasta +60. Premios para todos los finalistas.",
-imagen: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=400&h=250&fit=crop",    fecha: "2025-01-28"
-  },
-  {
-    id: 2,
-    titulo: "Nuevos horarios de escuelita",
-    descripcion: "A partir de febrero, la escuelita tendrá nuevos horarios por la tarde. Consultá con tu profesor los cambios.",
-imagen: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=400&h=250&fit=crop",    fecha: "2025-01-25"
-  },
-  {
-    id: 3,
-    titulo: "El equipo Sub-16 clasificó a la final regional",
-    descripcion: "Nuestros jugadores Sub-16 lograron un gran triunfo en el torneo interclubes y pasan a la final del próximo mes.",
-imagen: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=400&h=250&fit=crop",    fecha: "2025-01-20"
-  },
-  {
-    id: 4,
-    titulo: "Mantenimiento de canchas completado",
-    descripcion: "Finalizamos el trabajo de mantenimiento en las canchas 3 y 4. Ya están habilitadas para su uso.",
-imagen: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=400&h=250&fit=crop",    fecha: "2025-01-15"
-  },
-  {
-    id: 5,
-    titulo: "Charla de nutrición deportiva",
-    descripcion: "El próximo sábado a las 10hs, charla abierta sobre nutrición para deportistas a cargo de la Lic. María González.",
-imagen: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=400&h=250&fit=crop",    fecha: "2025-01-10"
-  },
-  {
-    id: 6,
-    titulo: "Inscripción abierta para interclubes",
-    descripcion: "Ya podés anotarte para representar al club en el torneo interclubes 2025. Consultá con los profes.",
-imagen: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=400&h=250&fit=crop",    fecha: "2025-01-05"
-  }
-];
+const API_BASE = 'http://localhost:4000';
 
 export default function NovedadesSection() {
+  const [news, setNews] = useState([]);
+  const [loadingNews, setLoadingNews] = useState(true);
   const [mostrarTodas, setMostrarTodas] = useState(false);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const r = await fetch('`${API_BASE}/api/news`');
+        const newsData = await r.json();
+        setNews(Array.isArray(newsData) ? newsData : []);
+      } catch (error) {
+        console.error('Error al cargar las noticias:', error);
+      } finally {
+        setLoadingNews(false);
+      }
+    }
+    load();
+  }, []);
+
   
   // Mostrar 4 o todas según el estado
-  const noticiasVisibles = mostrarTodas 
-    ? noticiasEjemplo 
-    : noticiasEjemplo.slice(0, 4);
+  const noticiasVisibles = useMemo(() =>{
+    return mostrarTodas ? news : news.slice (0,4);
+  }, [mostrarTodas, news]);
 
   const formatearFecha = (fechaStr) => {
     const fecha = new Date(fechaStr);
+    if (Number.isNaN(fecha.getTime())) {
+      return '';
+    }
     return fecha.toLocaleDateString('es-AR', { 
       day: 'numeric', 
       month: 'long', 
@@ -59,13 +42,26 @@ export default function NovedadesSection() {
     });
   };
 
+  const getImageSrc = (coverImageUrl) => {
+    if (!coverImageUrl) return '/placeholder.svg';
+    if (coverImageUrl.startsWith('http')) return coverImageUrl;
+    return `${API_BASE}${coverImageUrl}`;
+  }
+
+
+
   return (
     <section id="novedades" className="container mx-auto px-4 py-20">
       <h2 className="text-3xl font-bold mb-8 text-primary text-center">
         Últimas Novedades
       </h2>
-      
-      {/* Lista vertical de noticias */}
+
+      {loadingNews ? (
+        <p className="text-center text-gray-500">Cargando noticias...</p>
+      ) : noticiasVisibles.length === 0 ? (
+        <p className="text-center text-gray-500">No hay noticias disponibles.</p>
+      ) : null}
+
       <div className="flex flex-col gap-6 max-w-3xl mx-auto">
         {noticiasVisibles.map((noticia) => (
           <article 
@@ -75,8 +71,8 @@ export default function NovedadesSection() {
             {/* Imagen */}
             <div className="sm:w-48 sm:min-w-48 h-48 sm:h-auto">
               <img 
-                src={noticia.imagen || "/placeholder.svg"} 
-                alt={noticia.titulo}
+                src={getImageSrc(noticia.coverImageUrl)} 
+                alt={noticia.title}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -87,10 +83,10 @@ export default function NovedadesSection() {
                 {formatearFecha(noticia.fecha)}
               </span>
               <h3 className="text-lg font-semibold text-primary mb-2">
-                {noticia.titulo}
+                {noticia.title}
               </h3>
               <p className="text-neutral text-sm leading-relaxed">
-                {noticia.descripcion}
+                {noticia.body}
               </p>
             </div>
           </article>

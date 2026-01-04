@@ -2,16 +2,32 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import { sessionMiddleware } from "./config/session.js";
+import adminAuthRoutes from "./routes/adminAuth.js";
+import { requireAdmin } from "./middlewares/requireAdmin.js";
+import newsRoutes from "./routes/news.js";
+import path from "path";
+
+
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors());
+app.use(sessionMiddleware);
+app.use("/admin", adminAuthRoutes);
+app.use("/api/news", newsRoutes);
+//app.use("/uploads", express.static(path.join(path.cwd(), 'uploads')));
 
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, message: "API Parque Tenis Club funcionando" });
 });
+
+app.get("/admin/secret", requireAdmin, (req, res) => {
+    res.json({ message: "Acceso concedido al área administrativa" });
+});
+
 
 const PORT = process.env.PORT || 4000;
 
