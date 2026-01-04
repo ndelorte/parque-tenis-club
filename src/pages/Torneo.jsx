@@ -4,18 +4,19 @@ import { CalendarDays, Trophy, Users, ExternalLink } from 'lucide-react';
 
 // Datos de ejemplo - después se cargan desde Supabase
 const torneos = [
-  { id: 1, nombre: "Australia Open", mes: "Enero", fecha: "01-31 Ene", tipo: "grandslam", estado: "proximo", googleForms: "" },
+  { id: 1, nombre: "Australia Open", mes: "Enero", fecha: "01-31 Ene", tipo: "grandslam", estado: "en_curso", googleForms: "https://forms.gle/253NtVu6Z4gDXDBB7" },
   { id: 2, nombre: "Argentina Open", mes: "Febrero", fecha: "01-28 Feb", tipo: "normal", estado: "proximo", googleForms: "" },
   { id: 3, nombre: "Miami Open", mes: "Marzo", fecha: "01-31 Mar", tipo: "normal", estado: "proximo", googleForms: "" },
   { id: 4, nombre: "Monte Carlo Open", mes: "Abril", fecha: "01-30 Abr", tipo: "normal", estado: "proximo", googleForms: "" },
   { id: 5, nombre: "Roland Garros", mes: "Mayo", fecha: "01-31 May", tipo: "grandslam", estado: "proximo", googleForms: "" },
-  { id: 6, nombre: "Wimbledon", mes: "Junio", fecha: "01-30 Jun", tipo: "grandslam", estado: "proximo", googleForms: "" },
-  { id: 7, nombre: "Toronto Open", mes: "Julio", fecha: "01-31 Jul", tipo: "normal", estado: "proximo", googleForms: "" },
-  { id: 8, nombre: "Us Open", mes: "Agosto", fecha: "01-31 Ago", tipo: "grandslam", estado: "proximo", googleForms: "" },
-  { id: 9, nombre: "China Open", mes: "Septiembre", fecha: "01-30 Sep", tipo: "normal", estado: "proximo", googleForms: "" },
-  { id: 10, nombre: "Paris Open", mes: "Octubre", fecha: "01-31 Oct", tipo: "normal", estado: "proximo", googleForms: "" },
-  { id: 11, nombre: "Belgrado Open", mes: "Noviembre", fecha: "01-30 Nov", tipo: "normal", estado: "proximo", googleForms: "" },
-  { id: 12, nombre: "Masters", mes: "Diciembre", fecha: "10-21 Dic", tipo: "masters", estado: "proximo", googleForms: "" },
+  { id: 6, nombre: "Halle", mes: "Junio", fecha: "01-30 Jun", tipo: "normal", estado: "proximo", googleForms: "" },
+  { id: 7, nombre: "Mid Master", mes: "Julio", fecha: "1-21 Julio", tipo: "masters", estado: "proximo", googleForms: "" },
+  { id: 8, nombre: "Wimbledon", mes: "Julio", fecha: "01-31 Jul", tipo: "grandslam", estado: "proximo", googleForms: "" },
+  { id: 9, nombre: "Cincinnati Open", mes: "Agosto", fecha: "01-31 Ago", tipo: "normal", estado: "proximo", googleForms: "" },
+  { id: 10, nombre: "Us Open", mes: "Septiembre", fecha: "01-30 Sep", tipo: "grandslam", estado: "proximo", googleForms: "" },
+  { id: 11, nombre: "China Open", mes: "Octubre", fecha: "01-31 Oct", tipo: "normal", estado: "proximo", googleForms: "" },
+  { id: 12, nombre: "Paris Open", mes: "Noviembre", fecha: "01-30 Nov", tipo: "normal", estado: "proximo", googleForms: "" },
+  { id: 13, nombre: "Final Master", mes: "Diciembre", fecha: "10-21 Dic", tipo: "masters", estado: "proximo", googleForms: "" },
 ];
 
 const categorias = {
@@ -24,19 +25,23 @@ const categorias = {
     { nombre: "Single Intermedia", key: "single_intermedia" },
     { nombre: "Single Segunda", key: "single_segunda" },
     { nombre: "Single Tercera", key: "single_tercera" },
+    { nombre: "Single Cuarta", key: "single_cuarta" },
+    { nombre: "Single +50", key: "single_+50" },
   ],
   caballeros_dobles: [
     { nombre: "Dobles Primera", key: "dobles_primera" },
+    { nombre: "Dobles Intermedia", key: "dobles_intermedia" },
     { nombre: "Dobles Segunda", key: "dobles_segunda" },
   ],
   damas_singles: [
     { nombre: "Single Primera", key: "damas_single_primera" },
     { nombre: "Single Segunda", key: "damas_single_segunda" },
+    { nombre: "Single Tercera", key: "damas_single_tercera" },
   ],
   damas_dobles: [
     { nombre: "Dobles Primera", key: "damas_dobles_primera" },
+    { nombre: "Dobles Intermedia", key: "damas_dobles_intermedia" },
     { nombre: "Dobles Segunda", key: "damas_dobles_segunda" },
-    { nombre: "Dobles Tercera", key: "damas_dobles_tercera" },
   ],
   mixto: [
     { nombre: "Doble Mixto Primera", key: "mixto_primera" },
@@ -53,6 +58,8 @@ const rankingEjemplo = [
   { posicion: 6, nombre: "Lucas Martínez", puntos: 1250, torneos: 3 },
   { posicion: 7, nombre: "Pablo Sánchez", puntos: 1000, torneos: 2 },
   { posicion: 8, nombre: "Federico Torres", puntos: 875, torneos: 3 },
+  { posicion: 9, nombre: "Pablo Sánchez", puntos: 1000, torneos: 2 },
+  { posicion: 10, nombre: "Federico Torres", puntos: 875, torneos: 3 },
 ];
 
 export default function LigaVeranoInvierno() {
@@ -73,7 +80,7 @@ export default function LigaVeranoInvierno() {
             className="h-48 md:h-64 mx-auto mb-6 drop-shadow-lg"
           />
           <p className="text-white text-lg md:text-xl max-w-2xl mx-auto mb-8">
-            12 torneos anuales + Masters Final. Competí en todas las categorías y sumá puntos para el ranking.
+            12 torneos anuales + Mid Master + Masters Final. Competí en todas las categorías y sumá puntos para el ranking.
           </p>
          {/* Botón de inscripción - solo si hay formulario */}
 {torneoActivo?.googleForms && (
@@ -247,7 +254,7 @@ export default function LigaVeranoInvierno() {
       {/* Rankings */}
       <section id="rankings" className="py-16 px-4 bg-white">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-[#2d4a35] mb-8 text-center">Rankings por Categoría</h2>
+          <h2 className="text-3xl font-bold text-[#2d4a35] mb-8 text-center">Rankings por Categoría 2026</h2>
 
           {/* Tabs de categorías */}
           <div className="flex flex-wrap justify-center gap-2 mb-6">
@@ -321,20 +328,22 @@ export default function LigaVeranoInvierno() {
               <h3 className="text-xl font-bold mb-4">Torneo Normal</h3>
               <ul className="space-y-2">
                 <li className="flex justify-between"><span>Campeón</span><span className="font-bold">1000 pts</span></li>
-                <li className="flex justify-between"><span>Finalista</span><span>500 pts</span></li>
-                <li className="flex justify-between"><span>Semifinalista</span><span>250 pts</span></li>
-                <li className="flex justify-between"><span>Cuartos</span><span>125 pts</span></li>
-                <li className="flex justify-between"><span>Octavos</span><span>62 pts</span></li>
+                <li className="flex justify-between"><span>Finalista</span><span>650 pts</span></li>
+                <li className="flex justify-between"><span>Semifinalista</span><span>400 pts</span></li>
+                <li className="flex justify-between"><span>Cuartos</span><span>200 pts</span></li>
+                <li className="flex justify-between"><span>Octavos</span><span>100 pts</span></li>
+                <li className="flex justify-between"><span>16vos o más</span><span>50 pts</span></li>
               </ul>
             </div>
             <div className="bg-[#c4632a]/80 rounded-lg p-6 border border-[#c4632a]">
               <h3 className="text-xl font-bold mb-4">Grand Slam (x2)</h3>
               <ul className="space-y-2">
                 <li className="flex justify-between"><span>Campeón</span><span className="font-bold">2000 pts</span></li>
-                <li className="flex justify-between"><span>Finalista</span><span>1000 pts</span></li>
-                <li className="flex justify-between"><span>Semifinalista</span><span>500 pts</span></li>
-                <li className="flex justify-between"><span>Cuartos</span><span>250 pts</span></li>
-                <li className="flex justify-between"><span>Octavos</span><span>124 pts</span></li>
+                <li className="flex justify-between"><span>Finalista</span><span>1300 pts</span></li>
+                <li className="flex justify-between"><span>Semifinalista</span><span>800 pts</span></li>
+                <li className="flex justify-between"><span>Cuartos</span><span>400 pts</span></li>
+                <li className="flex justify-between"><span>Octavos</span><span>200 pts</span></li>
+                <li className="flex justify-between"><span>16vos o más</span><span>100 pts</span></li>
               </ul>
             </div>
           </div>
