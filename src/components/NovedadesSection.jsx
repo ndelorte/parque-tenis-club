@@ -1,6 +1,6 @@
 // components/NovedadesSection.jsx
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 const API_BASE = 'http://localhost:4000';
 
@@ -94,7 +94,7 @@ export default function NovedadesSection() {
       </div>
 
       {/* Botón Ver más / Ver menos */}
-      {noticiasEjemplo.length > 4 && (
+      {news.length > 4 && (
         <div className="text-center mt-8">
           <button
             onClick={() => setMostrarTodas(!mostrarTodas)}

@@ -6,7 +6,16 @@ import path from 'path';
 import { uploadDisk } from '../middlewares/uploadDisk.js';
 
 const router = express.Router();
-/* LO QUE SE VE  */
+
+/* TODAS */
+
+router.get("/admin/all", requireAdmin, async (req, res) => {
+    const news = await News.find().sort({ publishedAt: -1 }).limit(200);
+    res.json(news);
+});
+
+
+/* PUBLICO  */
 router.get('/', async (req, res) => {
     const news = await News.find({isPublished: true}).sort({ publishedAt: -1 }).limit(10);
     res.json(news);
