@@ -1,7 +1,9 @@
 // Liga.jsx
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000"
 
 // Datos de equipos y fixtures
 const equiposPorCategoria = {
@@ -626,30 +628,114 @@ const plantelesPorCategoria = {
 // Fixtures por categoria
 const fixturesPorCategoria = {
   caballeros_a: [
-    { instancia: "Fecha 1", fecha: "1-12-2025", horario: "21:00", local: "Extraordinario equipo", visitante: "Fincas de Iraola 2" },
+    {
+      instancia: "Fecha 1",
+      fecha: "1-12-2025",
+      horario: "21:00",
+      local: "Extraordinario equipo",
+      visitante: "Fincas de Iraola 2",
+    },
     { instancia: "Fecha 1", fecha: "3-12-2025", horario: "21:00", local: "Hay equipo", visitante: "Los de siempre" },
     { instancia: "Fecha 1", fecha: "5-12-2025", horario: "21:00", local: "Desconocidos", visitante: "Parque tenis" },
-    { instancia: "Fecha 1", fecha: "5-12-2025", horario: "14:00", local: "Los Arizu", visitante: "Los pibes del super" },
-    { instancia: "Fecha 2", fecha: "19-12-2025", horario: "14:00", local: "Extraordinario equipo", visitante: "Los de siempre" },
-    { instancia: "Fecha 2", fecha: "20-12-2025", horario: "21:00", local: "Los pibes del super", visitante: "Fincas de Iraola 2" },
+    {
+      instancia: "Fecha 1",
+      fecha: "5-12-2025",
+      horario: "14:00",
+      local: "Los Arizu",
+      visitante: "Los pibes del super",
+    },
+    {
+      instancia: "Fecha 2",
+      fecha: "19-12-2025",
+      horario: "14:00",
+      local: "Extraordinario equipo",
+      visitante: "Los de siempre",
+    },
+    {
+      instancia: "Fecha 2",
+      fecha: "20-12-2025",
+      horario: "21:00",
+      local: "Los pibes del super",
+      visitante: "Fincas de Iraola 2",
+    },
     { instancia: "Fecha 2", fecha: "21-12-2025", horario: "21:00", local: "Hay equipo", visitante: "Parque tenis" },
     { instancia: "Fecha 2", fecha: "22-12-2025", horario: "21:00", local: "Los Arizu", visitante: "Desconocidos" },
-    { instancia: "Fecha 3", fecha: "5-01-2026", horario: "14:00", local: "Extraordinario equipo", visitante: "Los pibes del super" },
+    {
+      instancia: "Fecha 3",
+      fecha: "5-01-2026",
+      horario: "14:00",
+      local: "Extraordinario equipo",
+      visitante: "Los pibes del super",
+    },
     { instancia: "Fecha 3", fecha: "7-01-2026", horario: "21:00", local: "Hay equipo", visitante: "Los Arizu" },
     { instancia: "Fecha 3", fecha: "8-01-2026", horario: "21:00", local: "Parque tenis", visitante: "Los de siempre" },
-    { instancia: "Fecha 3", fecha: "8-01-2026", horario: "14:00", local: "Desconocidos", visitante: "Fincas de Iraola 2" },
-    { instancia: "Fecha 4", fecha: "14-01-2026", horario: "21:00", local: "Extraordinario equipo", visitante: "Los Arizu" },
-    { instancia: "Fecha 4", fecha: "16-01-2026", horario: "21:00", local: "Los Arizu", visitante: "Fincas de Iraola 2" },
+    {
+      instancia: "Fecha 3",
+      fecha: "8-01-2026",
+      horario: "14:00",
+      local: "Desconocidos",
+      visitante: "Fincas de Iraola 2",
+    },
+    {
+      instancia: "Fecha 4",
+      fecha: "14-01-2026",
+      horario: "21:00",
+      local: "Extraordinario equipo",
+      visitante: "Los Arizu",
+    },
+    {
+      instancia: "Fecha 4",
+      fecha: "16-01-2026",
+      horario: "21:00",
+      local: "Los Arizu",
+      visitante: "Fincas de Iraola 2",
+    },
     { instancia: "Fecha 4", fecha: "17-01-2026", horario: "14:00", local: "Hay equipo", visitante: "Desconocidos" },
-    { instancia: "Fecha 4", fecha: "26-01-2026", horario: "21:00", local: "Extraordinario equipo", visitante: "Desconocidos" },
-    { instancia: "Fecha 5", fecha: "27-01-2026", horario: "21:00", local: "Los pibes del super", visitante: "Los de siempre" },
+    {
+      instancia: "Fecha 4",
+      fecha: "26-01-2026",
+      horario: "21:00",
+      local: "Extraordinario equipo",
+      visitante: "Desconocidos",
+    },
+    {
+      instancia: "Fecha 5",
+      fecha: "27-01-2026",
+      horario: "21:00",
+      local: "Los pibes del super",
+      visitante: "Los de siempre",
+    },
     { instancia: "Fecha 5", fecha: "29-01-2026", horario: "21:00", local: "Los Arizu", visitante: "Hay Equipo" },
-    { instancia: "Fecha 5", fecha: "31-01-2026", horario: "14:00", local: "Extraordinario equipo", visitante: "Hay equipo" },
+    {
+      instancia: "Fecha 5",
+      fecha: "31-01-2026",
+      horario: "14:00",
+      local: "Extraordinario equipo",
+      visitante: "Hay equipo",
+    },
     { instancia: "Fecha 6", fecha: "11-02-2026", horario: "21:00", local: "Desconocidos", visitante: "Hay Equipo" },
-    { instancia: "Fecha 6", fecha: "11-02-2026", horario: "21:00", local: "Parque tenis", visitante: "Fincas de Iraola 2" },
-    { instancia: "Fecha 6", fecha: "18-02-2026", horario: "14:00", local: "Los pibes del super", visitante: "Los de siempre" },
+    {
+      instancia: "Fecha 6",
+      fecha: "11-02-2026",
+      horario: "21:00",
+      local: "Parque tenis",
+      visitante: "Fincas de Iraola 2",
+    },
+    {
+      instancia: "Fecha 6",
+      fecha: "18-02-2026",
+      horario: "14:00",
+      local: "Los pibes del super",
+      visitante: "Los de siempre",
+    },
     { instancia: "Fecha 7", fecha: "18-02-2026", horario: "21:00", local: "Los Arizu", visitante: "Hay Equipo" },
-    { instancia: "Fecha 7", fecha: "19-02-2026", horario: "14:00", local: "Fincas de Iraola 2", visitante: "Desconocidos" },
+    {
+      instancia: "Fecha 7",
+      fecha: "19-02-2026",
+      horario: "14:00",
+      local: "Fincas de Iraola 2",
+      visitante: "Desconocidos",
+    },
     { instancia: "Fecha 7", fecha: "20-02-2026", horario: "21:00", local: "Parque tenis", visitante: "Los de siempre" },
     { instancia: "CUARTOS", fecha: "23-02-2026", horario: "21:00", local: "1ro", visitante: "8vo" },
     { instancia: "CUARTOS", fecha: "26-02-2026", horario: "21:00", local: "2do", visitante: "7mo" },
@@ -661,22 +747,52 @@ const fixturesPorCategoria = {
     { instancia: "FINAL", fecha: "08-03-2026", horario: "18:00", local: "", visitante: "" },
   ],
   caballeros_b: [
-    { instancia: "Fecha 1", fecha: "2-12-2025", horario: "21:00", local: "Finito Tenis Club", visitante: "Team Torres" },
+    {
+      instancia: "Fecha 1",
+      fecha: "2-12-2025",
+      horario: "21:00",
+      local: "Finito Tenis Club",
+      visitante: "Team Torres",
+    },
     { instancia: "Fecha 1", fecha: "8-12-2025", horario: "9:00", local: "Mostrame el pique", visitante: "Truchon" },
     { instancia: "Fecha 1", fecha: "4-12-2025", horario: "21:00", local: "Los muchachos", visitante: "Prado Kai" },
     { instancia: "Fecha 2", fecha: "26-12-2025", horario: "21:00", local: "Team Goat", visitante: "Team Torres" },
     { instancia: "Fecha 2", fecha: "28-12-2025", horario: "18:00", local: "Finito Tenis Club", visitante: "Prado Kai" },
-    { instancia: "Fecha 2", fecha: "29-12-2025", horario: "14:00", local: "Mostrame el pique", visitante: "Los muchachos" },
+    {
+      instancia: "Fecha 2",
+      fecha: "29-12-2025",
+      horario: "14:00",
+      local: "Mostrame el pique",
+      visitante: "Los muchachos",
+    },
     { instancia: "Fecha 2", fecha: "10-01-2026", horario: "21:00", local: "Team Goat", visitante: "Truchon" },
     { instancia: "Fecha 3", fecha: "09-01-2026", horario: "21:00", local: "Team Torres", visitante: "Prado Kai" },
-    { instancia: "Fecha 3", fecha: "06-01-2026", horario: "14:00", local: "Finito Tenis Club", visitante: "Mostrame el pique" },
+    {
+      instancia: "Fecha 3",
+      fecha: "06-01-2026",
+      horario: "14:00",
+      local: "Finito Tenis Club",
+      visitante: "Mostrame el pique",
+    },
     { instancia: "Fecha 3", fecha: "19-01-2026", horario: "14:00", local: "Team Goat", visitante: "Los muchachos" },
     { instancia: "Fecha 4", fecha: "24-01-2026", horario: "14:00", local: "Los muchachos", visitante: "Truchon" },
-    { instancia: "Fecha 4", fecha: "22-01-2026", horario: "21:00", local: "Team Torres", visitante: "Mostrame el pique" },
+    {
+      instancia: "Fecha 4",
+      fecha: "22-01-2026",
+      horario: "21:00",
+      local: "Team Torres",
+      visitante: "Mostrame el pique",
+    },
     { instancia: "Fecha 4", fecha: "30-01-2026", horario: "21:00", local: "Prado Kai", visitante: "Mostrame el pique" },
     { instancia: "Fecha 5", fecha: "31-01-2026", horario: "21:00", local: "Truchon", visitante: "Mostrame el pique" },
     { instancia: "Fecha 5", fecha: "02-02-2026", horario: "21:00", local: "Team Goat", visitante: "Finito Tenis Club" },
-    { instancia: "Fecha 6", fecha: "07-02-2026", horario: "14:00", local: "Los muchachos", visitante: "Finito Tenis Club" },
+    {
+      instancia: "Fecha 6",
+      fecha: "07-02-2026",
+      horario: "14:00",
+      local: "Los muchachos",
+      visitante: "Finito Tenis Club",
+    },
     { instancia: "Fecha 6", fecha: "08-02-2026", horario: "21:00", local: "Truchon", visitante: "Team Torres" },
     { instancia: "Fecha 7", fecha: "18-02-2026", horario: "21:00", local: "Team Goat", visitante: "Finito Tenis Club" },
     { instancia: "Fecha 7", fecha: "15-02-2026", horario: "14:00", local: "Los muchachos", visitante: "Team Torres" },
@@ -691,24 +807,72 @@ const fixturesPorCategoria = {
   damas_a: [
     { instancia: "Fecha 1", fecha: "6-12-2025", horario: "18:00", local: "Gin Tonic", visitante: "Fifteen love" },
     { instancia: "Fecha 1", fecha: "5-12-2025", horario: "19:30", local: "No es ese el pique", visitante: "Ducilo" },
-    { instancia: "Fecha 1", fecha: "8-12-2025", horario: "11:00", local: "Say no more", visitante: "Cooperarios Damas" },
+    {
+      instancia: "Fecha 1",
+      fecha: "8-12-2025",
+      horario: "11:00",
+      local: "Say no more",
+      visitante: "Cooperarios Damas",
+    },
     { instancia: "Fecha 2", fecha: "23-12-2025", horario: "19:30", local: "Gin Tonic", visitante: "Ducilo" },
-    { instancia: "Fecha 2", fecha: "27-12-2025", horario: "18:00", local: "Say no more", visitante: "No es ese el pique" },
+    {
+      instancia: "Fecha 2",
+      fecha: "27-12-2025",
+      horario: "18:00",
+      local: "Say no more",
+      visitante: "No es ese el pique",
+    },
     { instancia: "Fecha 2", fecha: "30-12-2025", horario: "19:30", local: "El rejunte", visitante: "Fifteen love" },
     { instancia: "Fecha 3", fecha: "11-01-2026", horario: "21:00", local: "Gin Tonic", visitante: "Say no more" },
     { instancia: "Fecha 3", fecha: "10-01-2026", horario: "14:00", local: "Ducilo", visitante: "Fifteen love" },
-    { instancia: "Fecha 3", fecha: "15-01-2026", horario: "19:30", local: "Cooperarios Damas", visitante: "El rejunte" },
+    {
+      instancia: "Fecha 3",
+      fecha: "15-01-2026",
+      horario: "19:30",
+      local: "Cooperarios Damas",
+      visitante: "El rejunte",
+    },
     { instancia: "Fecha 4", fecha: "18-01-2026", horario: "9:00", local: "Fifteen love", visitante: "Say no more" },
     { instancia: "Fecha 4", fecha: "18-01-2026", horario: "11:00", local: "Ducilo", visitante: "El rejunte" },
-    { instancia: "Fecha 4", fecha: "20-01-2026", horario: "19:30", local: "No es ese el pique", visitante: "Cooperarios Damas" },
-    { instancia: "Fecha 5", fecha: "01-02-2026", horario: "16:00", local: "No es ese el pique", visitante: "El rejunte" },
+    {
+      instancia: "Fecha 4",
+      fecha: "20-01-2026",
+      horario: "19:30",
+      local: "No es ese el pique",
+      visitante: "Cooperarios Damas",
+    },
+    {
+      instancia: "Fecha 5",
+      fecha: "01-02-2026",
+      horario: "16:00",
+      local: "No es ese el pique",
+      visitante: "El rejunte",
+    },
     { instancia: "Fecha 5", fecha: "08-02-2026", horario: "11:00", local: "Say no more", visitante: "Ducilo" },
     { instancia: "Fecha 5", fecha: "05-02-2026", horario: "19:30", local: "Cooperarios Damas", visitante: "Gin Tonic" },
     { instancia: "Fecha 6", fecha: "07-02-2026", horario: "18:00", local: "El rejunte", visitante: "Say no more" },
-    { instancia: "Fecha 6", fecha: "08-02-2026", horario: "18:00", local: "No es ese el pique", visitante: "Gin Tonic" },
-    { instancia: "Fecha 6", fecha: "08-02-2026", horario: "16:00", local: "Cooperarios Damas", visitante: "Fifteen love" },
+    {
+      instancia: "Fecha 6",
+      fecha: "08-02-2026",
+      horario: "18:00",
+      local: "No es ese el pique",
+      visitante: "Gin Tonic",
+    },
+    {
+      instancia: "Fecha 6",
+      fecha: "08-02-2026",
+      horario: "16:00",
+      local: "Cooperarios Damas",
+      visitante: "Fifteen love",
+    },
     { instancia: "Fecha 7", fecha: "16-02-2026", horario: "16:00", local: "El rejunte", visitante: "Gin Tonic" },
-    { instancia: "Fecha 7", fecha: "17-02-2026", horario: "18:00", local: "No es ese el pique", visitante: "Fifteen love" },
+    {
+      instancia: "Fecha 7",
+      fecha: "17-02-2026",
+      horario: "18:00",
+      local: "No es ese el pique",
+      visitante: "Fifteen love",
+    },
     { instancia: "Fecha 7", fecha: "13-02-2026", horario: "19:30", local: "Ducilo", visitante: "Cooperarios Damas" },
     { instancia: "CUARTOS", fecha: "21-02-2026", horario: "16:00", local: "7mo", visitante: "2do" },
     { instancia: "CUARTOS", fecha: "22-02-2026", horario: "9:00", local: "3ro", visitante: "6to" },
@@ -720,30 +884,78 @@ const fixturesPorCategoria = {
   ],
   damas_b: [
     { instancia: "Fecha 1", fecha: "2-12-2025", horario: "19:30", local: "Hudson Tenis", visitante: "Las liebres" },
-    { instancia: "Fecha 1", fecha: "9-12-2025", horario: "19:30", local: "Juan Carlas Tennis Club", visitante: "Bikinipoen" },
+    {
+      instancia: "Fecha 1",
+      fecha: "9-12-2025",
+      horario: "19:30",
+      local: "Juan Carlas Tennis Club",
+      visitante: "Bikinipoen",
+    },
     { instancia: "Fecha 1", fecha: "7-12-2025", horario: "11:00", local: "Las Old G", visitante: "Old Georgian" },
     { instancia: "Fecha 1", fecha: "4-12-2025", horario: "19:30", local: "Dream team", visitante: "La red de amigas" },
     { instancia: "Fecha 2", fecha: "21-12-2025", horario: "12:00", local: "Hudson Tenis", visitante: "Bikinipoen" },
-    { instancia: "Fecha 2", fecha: "26-12-2025", horario: "19:30", local: "Juan Carlas Tennis Club", visitante: "La red de amigas" },
+    {
+      instancia: "Fecha 2",
+      fecha: "26-12-2025",
+      horario: "19:30",
+      local: "Juan Carlas Tennis Club",
+      visitante: "La red de amigas",
+    },
     { instancia: "Fecha 2", fecha: "21-12-2025", horario: "11:00", local: "Las Old G", visitante: "Dream team" },
     { instancia: "Fecha 3", fecha: "02-01-2026", horario: "14:00", local: "Hudson Tenis", visitante: "Old Georgian" },
     { instancia: "Fecha 3", fecha: "04-01-2026", horario: "12:00", local: "Bikinipoen", visitante: "Doble Falta" },
     { instancia: "Fecha 3", fecha: "06-01-2026", horario: "19:30", local: "Las liebres", visitante: "Dream team" },
-    { instancia: "Fecha 3", fecha: "09-01-2026", horario: "19:30", local: "Juan Carlas Tennis Club", visitante: "Las Old G" },
+    {
+      instancia: "Fecha 3",
+      fecha: "09-01-2026",
+      horario: "19:30",
+      local: "Juan Carlas Tennis Club",
+      visitante: "Las Old G",
+    },
     { instancia: "Fecha 3", fecha: "13-01-2026", horario: "19:30", local: "Old Georgian", visitante: "Dream team" },
     { instancia: "Fecha 4", fecha: "16-01-2026", horario: "19:30", local: "Bikinipoen", visitante: "Las Old G" },
-    { instancia: "Fecha 4", fecha: "11-01-2026", horario: "9:00", local: "Las liebres", visitante: "Juan Carlas Tennis Club" },
+    {
+      instancia: "Fecha 4",
+      fecha: "11-01-2026",
+      horario: "9:00",
+      local: "Las liebres",
+      visitante: "Juan Carlas Tennis Club",
+    },
     { instancia: "Fecha 5", fecha: "27-01-2026", horario: "18:00", local: "Hudson Tenis", visitante: "Dream team" },
     { instancia: "Fecha 5", fecha: "29-01-2026", horario: "14:00", local: "La red de amigas", visitante: "Las Old G" },
     { instancia: "Fecha 5", fecha: "31-01-2026", horario: "12:00", local: "Bikinipoen", visitante: "Las liebres" },
     { instancia: "Fecha 6", fecha: "02-02-2026", horario: "19:30", local: "Hudson Tenis", visitante: "Las Old G" },
-    { instancia: "Fecha 6", fecha: "08-02-2026", horario: "19:30", local: "Dream Team", visitante: "Juan Carlas Tennis Club" },
-    { instancia: "Fecha 6", fecha: "06-02-2026", horario: "14:00", local: "La red de amigas", visitante: "Las liebres" },
+    {
+      instancia: "Fecha 6",
+      fecha: "08-02-2026",
+      horario: "19:30",
+      local: "Dream Team",
+      visitante: "Juan Carlas Tennis Club",
+    },
+    {
+      instancia: "Fecha 6",
+      fecha: "06-02-2026",
+      horario: "14:00",
+      local: "La red de amigas",
+      visitante: "Las liebres",
+    },
     { instancia: "Fecha 7", fecha: "07-02-2026", horario: "21:00", local: "Old Georgian", visitante: "Bikinipoen" },
-    { instancia: "Fecha 7", fecha: "14-02-2026", horario: "16:00", local: "Hudson Tenis", visitante: "Juan Carlas Tennis Club" },
+    {
+      instancia: "Fecha 7",
+      fecha: "14-02-2026",
+      horario: "16:00",
+      local: "Hudson Tenis",
+      visitante: "Juan Carlas Tennis Club",
+    },
     { instancia: "Fecha 7", fecha: "16-02-2026", horario: "12:00", local: "Las Old G", visitante: "Las liebres" },
     { instancia: "Fecha 7", fecha: "16-02-2026", horario: "18:00", local: "Dream Team", visitante: "Bikinipoen" },
-    { instancia: "Fecha 7", fecha: "16-02-2026", horario: "12:00", local: "La red de amigas", visitante: "Old Georgian" },
+    {
+      instancia: "Fecha 7",
+      fecha: "16-02-2026",
+      horario: "12:00",
+      local: "La red de amigas",
+      visitante: "Old Georgian",
+    },
     { instancia: "CUARTOS", fecha: "21-02-2026", horario: "12:00", local: "1ro", visitante: "8vo" },
     { instancia: "CUARTOS", fecha: "22-02-2026", horario: "11:00", local: "2do", visitante: "7mo" },
     { instancia: "CUARTOS", fecha: "22-02-2026", horario: "18:30", local: "3ro", visitante: "6to" },
@@ -755,20 +967,50 @@ const fixturesPorCategoria = {
   ],
   mixto_a: [
     { instancia: "Fecha 1", fecha: "8-12-2025", horario: "15:00", local: "Cande y Co", visitante: "C toma team" },
-    { instancia: "Fecha 1", fecha: "20-12-2025", horario: "12:00", local: "Mezcladito", visitante: "Matrimonios y algo mas" },
+    {
+      instancia: "Fecha 1",
+      fecha: "20-12-2025",
+      horario: "12:00",
+      local: "Mezcladito",
+      visitante: "Matrimonios y algo mas",
+    },
     { instancia: "Fecha 1", fecha: "14-12-2025", horario: "13:00", local: "Parque Mixto", visitante: "After Set" },
     { instancia: "Fecha 1", fecha: "27-12-2025", horario: "14:00", local: "Mezcladito", visitante: "After Set" },
-    { instancia: "Fecha 2", fecha: "28-12-2025", horario: "11:00", local: "C toma Team", visitante: "Matrimonios y algo mas" },
+    {
+      instancia: "Fecha 2",
+      fecha: "28-12-2025",
+      horario: "11:00",
+      local: "C toma Team",
+      visitante: "Matrimonios y algo mas",
+    },
     { instancia: "Fecha 2", fecha: "19-12-2025", horario: "19:30", local: "Parque Mixto", visitante: "Cande y Co" },
     { instancia: "Fecha 3", fecha: "10-01-2026", horario: "18:00", local: "Mezcladito", visitante: "C toma team" },
     { instancia: "Fecha 3", fecha: "08-01-2026", horario: "19:30", local: "Cande y Co", visitante: "After Set" },
-    { instancia: "Fecha 3", fecha: "11-01-2026", horario: "19:30", local: "Parque Mixto", visitante: "Matrimonios y algo mas" },
+    {
+      instancia: "Fecha 3",
+      fecha: "11-01-2026",
+      horario: "19:30",
+      local: "Parque Mixto",
+      visitante: "Matrimonios y algo mas",
+    },
     { instancia: "Fecha 4", fecha: "24-01-2026", horario: "18:00", local: "Cande y Co", visitante: "Mezcladito" },
     { instancia: "Fecha 4", fecha: "20-01-2026", horario: "21:00", local: "Parque Mixto", visitante: "C toma team" },
-    { instancia: "Fecha 4", fecha: "22-01-2026", horario: "19:30", local: "After set", visitante: "Matrimonios y algo mas" },
+    {
+      instancia: "Fecha 4",
+      fecha: "22-01-2026",
+      horario: "19:30",
+      local: "After set",
+      visitante: "Matrimonios y algo mas",
+    },
     { instancia: "Fecha 5", fecha: "17-02-2026", horario: "16:00", local: "Mezcladito", visitante: "Parque mixto" },
     { instancia: "Fecha 5", fecha: "12-02-2026", horario: "21:00", local: "C toma team", visitante: "After Set" },
-    { instancia: "Fecha 5", fecha: "10-02-2026", horario: "19:30", local: "Cande y Co", visitante: "Matrimonios y algo mas" },
+    {
+      instancia: "Fecha 5",
+      fecha: "10-02-2026",
+      horario: "19:30",
+      local: "Cande y Co",
+      visitante: "Matrimonios y algo mas",
+    },
     { instancia: "CUARTOS", fecha: "20-02-2026", horario: "21:00", local: "6to", visitante: "3ro" },
     { instancia: "CUARTOS", fecha: "17-02-2026", horario: "14:00", local: "4to", visitante: "5to" },
     { instancia: "SEMIFINAL", fecha: "26-02-2026", horario: "21:00", local: "1ro", visitante: "Ganador A" },
@@ -814,21 +1056,11 @@ function AnimatedHourglass() {
         {/* Marco del reloj */}
         <rect x="15" y="5" width="70" height="8" rx="2" fill="#1a3a4a" />
         <rect x="15" y="107" width="70" height="8" rx="2" fill="#1a3a4a" />
-        
+
         {/* Vidrio del reloj */}
-        <path
-          d="M25 13 L25 45 Q50 60 50 60 Q50 60 75 45 L75 13 Z"
-          fill="#e0f2fe"
-          stroke="#1a3a4a"
-          strokeWidth="2"
-        />
-        <path
-          d="M25 107 L25 75 Q50 60 50 60 Q50 60 75 75 L75 107 Z"
-          fill="#e0f2fe"
-          stroke="#1a3a4a"
-          strokeWidth="2"
-        />
-        
+        <path d="M25 13 L25 45 Q50 60 50 60 Q50 60 75 45 L75 13 Z" fill="#e0f2fe" stroke="#1a3a4a" strokeWidth="2" />
+        <path d="M25 107 L25 75 Q50 60 50 60 Q50 60 75 75 L75 107 Z" fill="#e0f2fe" stroke="#1a3a4a" strokeWidth="2" />
+
         {/* Arena arriba - con animacion de vaciado */}
         <path
           d="M30 18 L30 40 Q50 52 50 52 Q50 52 70 40 L70 18 Z"
@@ -838,10 +1070,13 @@ function AnimatedHourglass() {
             animation: "sandEmpty 3s ease-in-out infinite",
           }}
         />
-        
+
         {/* Arena cayendo */}
         <line
-          x1="50" y1="52" x2="50" y2="68"
+          x1="50"
+          y1="52"
+          x2="50"
+          y2="68"
           stroke="#c4632a"
           strokeWidth="3"
           strokeLinecap="round"
@@ -849,7 +1084,7 @@ function AnimatedHourglass() {
             animation: "sandFall 3s ease-in-out infinite",
           }}
         />
-        
+
         {/* Arena abajo - con animacion de llenado */}
         <path
           d="M35 102 L35 85 Q50 75 50 75 Q50 75 65 85 L65 102 Z"
@@ -859,12 +1094,12 @@ function AnimatedHourglass() {
             animation: "sandFill 3s ease-in-out infinite",
           }}
         />
-        
+
         {/* Soportes laterales */}
         <rect x="20" y="10" width="4" height="100" rx="2" fill="#1a3a4a" />
         <rect x="76" y="10" width="4" height="100" rx="2" fill="#1a3a4a" />
       </svg>
-      
+
       {/* Estilos de animacion */}
       <style jsx>{`
         @keyframes sandEmpty {
@@ -923,6 +1158,48 @@ export default function Liga() {
   const [categoriaActiva, setCategoriaActiva] = useState("caballeros_a")
   const [seccionActiva, setSeccionActiva] = useState("posiciones")
 
+  const [equipos, setEquipos] = useState([])
+  const [fixtures, setFixtures] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const temporada = tipoLiga === "verano" ? "verano-2025" : "invierno-2025"
+
+  useEffect(() => {
+    fetchLeagueData()
+  }, [categoriaActiva, tipoLiga])
+
+  const fetchLeagueData = async () => {
+    setLoading(true)
+    try {
+      console.log("[v0] Cargando datos para:", { categoriaActiva, temporada })
+
+      const [equiposRes, fixturesRes] = await Promise.all([
+        fetch(`${API_BASE}/api/league/standings/${categoriaActiva}?temporada=${temporada}`),
+        fetch(`${API_BASE}/api/league/matches/${categoriaActiva}?temporada=${temporada}`),
+      ])
+
+      console.log("[v0] Respuestas:", {
+        equiposStatus: equiposRes.status,
+        fixturesStatus: fixturesRes.status,
+      })
+
+      const equiposData = await equiposRes.json()
+      const fixturesData = await fixturesRes.json()
+
+      console.log("[v0] Datos recibidos:", {
+        equipos: equiposData.length,
+        fixtures: fixturesData.length,
+      })
+
+      setEquipos(equiposData)
+      setFixtures(fixturesData)
+    } catch (err) {
+      console.error("Error al cargar datos de liga:", err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#f5f5f5] pt-16">
       {/* Hero */}
@@ -958,7 +1235,9 @@ export default function Liga() {
               <button
                 onClick={() => setTipoLiga("invierno")}
                 className={`px-6 py-2 rounded-md font-medium transition ${
-                  tipoLiga === "invierno" ? "bg-[#c4632a] text-white" : "text-white/70 hover:text-white hover:bg-white/10"
+                  tipoLiga === "invierno"
+                    ? "bg-[#c4632a] text-white"
+                    : "text-white/70 hover:text-white hover:bg-white/10"
                 }`}
               >
                 Invierno
@@ -973,10 +1252,9 @@ export default function Liga() {
         <section className="bg-white py-8 px-4 border-b">
           <div className="container mx-auto max-w-4xl text-center">
             <p className="text-gray-700 leading-relaxed">
-              La Liga de Verano es una competencia por equipos donde cada serie
-              se define al mejor de 3 canchas jugadas simultaneamente. El equipo que gana 2 de las 3 canchas se lleva la
-              serie. Cada partido de dobles se juega al mejor de 3 sets (los dos primeros con tie-break y el tercero super
-              tie-break).
+              La Liga de Verano es una competencia por equipos donde cada serie se define al mejor de 3 canchas jugadas
+              simultaneamente. El equipo que gana 2 de las 3 canchas se lleva la serie. Cada partido de dobles se juega
+              al mejor de 3 sets (los dos primeros con tie-break y el tercero super tie-break).
             </p>
             <div className="flex flex-wrap justify-center gap-6 mt-6 text-sm">
               <div className="flex items-center gap-2">
@@ -1048,7 +1326,6 @@ export default function Liga() {
 
       {/* Contenido principal */}
       <main className="container mx-auto px-4 py-8">
-        
         {/* Mensaje de Proximamente para Liga de Invierno */}
         {tipoLiga === "invierno" ? (
           <div className="max-w-2xl mx-auto">
@@ -1060,16 +1337,14 @@ export default function Liga() {
               </div>
               <div className="p-8 md:p-12 text-center">
                 <AnimatedHourglass />
-                
-                <h3 className="text-3xl font-bold text-[#1a3a4a] mt-8 mb-4">
-                  Proximamente...
-                </h3>
-                
+
+                <h3 className="text-3xl font-bold text-[#1a3a4a] mt-8 mb-4">Proximamente...</h3>
+
                 <p className="text-gray-600 mb-8 max-w-md mx-auto leading-relaxed">
-                  La Liga de Invierno 2026 esta en preparacion. 
-                  Mientras tanto, seguí la Liga de Verano que se esta jugando ahora mismo.
+                  La Liga de Invierno 2026 esta en preparacion. Mientras tanto, seguí la Liga de Verano que se esta
+                  jugando ahora mismo.
                 </p>
-                
+
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <button
                     onClick={() => setTipoLiga("verano")}
@@ -1078,11 +1353,9 @@ export default function Liga() {
                     Ver Liga de Verano
                   </button>
                 </div>
-                
+
                 <div className="mt-10 pt-8 border-t border-gray-200">
-                  <p className="text-sm text-gray-500">
-                    Inscripciones abiertas a partir de Abril 2026
-                  </p>
+                  <p className="text-sm text-gray-500">Inscripciones abiertas a partir de Abril 2026</p>
                 </div>
               </div>
             </div>
@@ -1091,102 +1364,135 @@ export default function Liga() {
           <>
             {/* Tabla de Posiciones */}
             {seccionActiva === "posiciones" && (
-              <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="bg-[#2d4a35] text-white p-4">
-                  <h2 className="text-xl font-bold">{categoriasInfo[categoriaActiva].nombre} - Tabla de Posiciones</h2>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">#</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold">Equipo</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold">PTS</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold">PJ</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold">PG</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold">PP</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold">NP</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold">SF</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold">SC</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold">GF</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold">GC</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {equiposPorCategoria[categoriaActiva].map((equipo, index) => (
-                        <tr key={equipo.nombre} className="border-b last:border-0 hover:bg-gray-50">
-                          <td className="px-4 py-3 font-medium">{index + 1}</td>
-                          <td className="px-4 py-3 font-medium">{equipo.nombre}</td>
-                          <td className="px-4 py-3 text-center font-bold text-[#2d4a35]">{equipo.pts}</td>
-                          <td className="px-4 py-3 text-center">{equipo.pj}</td>
-                          <td className="px-4 py-3 text-center text-green-600">{equipo.pg}</td>
-                          <td className="px-4 py-3 text-center text-red-600">{equipo.pp}</td>
-                          <td className="px-4 py-3 text-center text-gray-500">{equipo.np}</td>
-                          <td className="px-4 py-3 text-center">{equipo.sf}</td>
-                          <td className="px-4 py-3 text-center">{equipo.sc}</td>
-                          <td className="px-4 py-3 text-center">{equipo.gf}</td>
-                          <td className="px-4 py-3 text-center">{equipo.gc}</td>
+              <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-6">
+                <h2 className="text-xl font-bold mb-6">
+                  {categoriasInfo[categoriaActiva].nombre} - Tabla de Posiciones
+                </h2>
+
+                {loading ? (
+                  <div className="text-center py-8">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-green-600"></div>
+                  </div>
+                ) : equipos.length === 0 ? (
+                  <p className="text-center text-gray-500 py-8">No hay datos de posiciones disponibles</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b-2 border-gray-200 text-left">
+                          <th className="pb-3 px-2 text-sm font-semibold">Pos</th>
+                          <th className="pb-3 px-2 text-sm font-semibold">Equipo</th>
+                          <th className="pb-3 px-2 text-sm font-semibold text-center">Pts</th>
+                          <th className="pb-3 px-2 text-sm font-semibold text-center">PJ</th>
+                          <th className="pb-3 px-2 text-sm font-semibold text-center">PG</th>
+                          <th className="pb-3 px-2 text-sm font-semibold text-center">PP</th>
+                          <th className="pb-3 px-2 text-sm font-semibold text-center">SF</th>
+                          <th className="pb-3 px-2 text-sm font-semibold text-center">SC</th>
+                          <th className="pb-3 px-2 text-sm font-semibold text-center">DS</th>
+                          <th className="pb-3 px-2 text-sm font-semibold text-center">GF</th>
+                          <th className="pb-3 px-2 text-sm font-semibold text-center">GC</th>
+                          <th className="pb-3 px-2 text-sm font-semibold text-center">DG</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="p-4 bg-gray-50 text-sm text-gray-600">
-                  <p>
-                    <strong>Leyenda:</strong> PTS = Puntos | PJ = Partidos Jugados | PG = Partidos Ganados | PP = Partidos
-                    Perdidos | NP = No Presentados | SF = Sets a Favor | SC = Sets en Contra | GF = Games a Favor | GC =
-                    Games en Contra
-                  </p>
-                </div>
+                      </thead>
+                      <tbody>
+                        {equipos.map((equipo, index) => (
+                          <tr key={equipo._id} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="py-3 px-2 font-semibold">{index + 1}</td>
+                            <td className="py-3 px-2 font-medium">{equipo.nombre}</td>
+                            <td className="py-3 px-2 text-center font-bold text-green-600">{equipo.pts}</td>
+                            <td className="py-3 px-2 text-center">{equipo.pj}</td>
+                            <td className="py-3 px-2 text-center">{equipo.pg}</td>
+                            <td className="py-3 px-2 text-center">{equipo.pp}</td>
+                            <td className="py-3 px-2 text-center">{equipo.sf}</td>
+                            <td className="py-3 px-2 text-center">{equipo.sc}</td>
+                            <td className="py-3 px-2 text-center font-medium">{equipo.difSets}</td>
+                            <td className="py-3 px-2 text-center">{equipo.gf}</td>
+                            <td className="py-3 px-2 text-center">{equipo.gc}</td>
+                            <td className="py-3 px-2 text-center font-medium">{equipo.difGames}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             )}
 
             {/* Fixture */}
             {seccionActiva === "fixture" && (
               <div className="space-y-6">
-                <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                  <div className="bg-[#2d4a35] text-white p-4">
-                    <h2 className="text-xl font-bold">{categoriasInfo[categoriaActiva].nombre} - Fixture Completo</h2>
+                <h2 className="text-xl font-bold">{categoriasInfo[categoriaActiva].nombre} - Fixture Completo</h2>
+
+                {loading ? (
+                  <div className="text-center py-8">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-green-600"></div>
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gray-100">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-sm font-semibold">Instancia</th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold">Fecha</th>
-                          <th className="px-4 py-3 text-center text-sm font-semibold">Hora</th>
-                          <th className="px-4 py-3 text-right text-sm font-semibold">Local</th>
-                          <th className="px-4 py-3 text-center text-sm font-semibold">vs</th>
-                          <th className="px-4 py-3 text-left text-sm font-semibold">Visitante</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {fixturesPorCategoria[categoriaActiva].map((partido, index) => {
-                          const esPlayoff =
-                            partido.instancia.includes("CUARTOS") ||
-                            partido.instancia.includes("SEMIFINAL") ||
-                            partido.instancia.includes("FINAL") ||
-                            partido.instancia.includes("TERCER")
-                          return (
-                            <tr
-                              key={index}
-                              className={`border-b last:border-0 hover:bg-gray-50 ${esPlayoff ? "bg-[#c4632a]/10" : ""}`}
-                            >
-                              <td className={`px-4 py-3 font-medium ${esPlayoff ? "text-[#c4632a]" : ""}`}>
-                                {partido.instancia}
-                              </td>
-                              <td className="px-4 py-3">{partido.fecha}</td>
-                              <td className="px-4 py-3 text-center">{partido.horario}</td>
-                              <td className="px-4 py-3 text-right font-medium">{partido.local || "-"}</td>
-                              <td className="px-4 py-3 text-center text-gray-400">vs</td>
-                              <td className="px-4 py-3 font-medium">{partido.visitante || "-"}</td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                ) : fixtures.length === 0 ? (
+                  <p className="text-center text-gray-500 py-8">No hay fixture disponible</p>
+                ) : (
+                  (() => {
+                    const partidosPorInstancia = {}
+                    fixtures.forEach((partido) => {
+                      if (!partidosPorInstancia[partido.instancia]) {
+                        partidosPorInstancia[partido.instancia] = []
+                      }
+                      partidosPorInstancia[partido.instancia].push(partido)
+                    })
+
+                    return Object.entries(partidosPorInstancia).map(([instancia, partidos]) => (
+                      <div key={instancia} className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-6">
+                        <h3 className="text-lg font-bold mb-4 text-green-600">{instancia}</h3>
+                        <div className="space-y-3">
+                          {partidos.map((partido) => {
+                            const equipoLocal = partido.equipoLocal?.nombre || partido.nombreLocal || "TBD"
+                            const equipoVisitante = partido.equipoVisitante?.nombre || partido.nombreVisitante || "TBD"
+
+                            return (
+                              <div
+                                key={partido._id}
+                                className="flex items-center justify-between border-b border-gray-100 pb-3"
+                              >
+                                <div className="flex-1 text-right pr-4">
+                                  <p
+                                    className={`font-semibold ${partido.jugado && partido.resultadoSerieLocal > partido.resultadoSerieVisitante ? "text-green-600" : ""}`}
+                                  >
+                                    {equipoLocal}
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-3 px-4 py-2 bg-gray-50 rounded-lg min-w-[100px] justify-center">
+                                  {partido.jugado ? (
+                                    <>
+                                      <span className="text-xl font-bold">
+                                        {partido.resultadoSerieLocal || partido.setsLocal}
+                                      </span>
+                                      <span className="text-gray-400">-</span>
+                                      <span className="text-xl font-bold">
+                                        {partido.resultadoSerieVisitante || partido.setsVisitante}
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <span className="text-gray-400 font-medium">vs</span>
+                                  )}
+                                </div>
+                                <div className="flex-1 pl-4">
+                                  <p
+                                    className={`font-semibold ${partido.jugado && (partido.resultadoSerieVisitante > partido.resultadoSerieLocal || partido.setsVisitante > partido.setsLocal) ? "text-green-600" : ""}`}
+                                  >
+                                    {equipoVisitante}
+                                  </p>
+                                </div>
+                                <div className="text-right text-sm text-gray-500 min-w-[120px]">
+                                  <p>{partido.fecha}</p>
+                                  <p>{partido.horario}</p>
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    ))
+                  })()
+                )}
               </div>
             )}
 
@@ -1199,18 +1505,13 @@ export default function Liga() {
                     <div key={equipo.nombre} className="bg-white rounded-xl shadow-md overflow-hidden">
                       <div className="bg-[#2d4a35] text-white p-4 flex justify-between items-center">
                         <h3 className="text-lg font-bold">{equipo.nombre}</h3>
-                        <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
-                          {jugadores.length} jugadores
-                        </span>
+                        <span className="bg-white/20 px-3 py-1 rounded-full text-sm">{jugadores.length} jugadores</span>
                       </div>
                       <div className="p-4">
                         {jugadores.length > 0 ? (
                           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             {jugadores.map((jugador, idx) => (
-                              <li
-                                key={idx}
-                                className="flex items-center gap-2 py-2 px-3 bg-gray-50 rounded-lg text-sm"
-                              >
+                              <li key={idx} className="flex items-center gap-2 py-2 px-3 bg-gray-50 rounded-lg text-sm">
                                 <span className="w-6 h-6 bg-[#2d4a35] text-white rounded-full flex items-center justify-center text-xs font-medium">
                                   {idx + 1}
                                 </span>
@@ -1219,9 +1520,7 @@ export default function Liga() {
                             ))}
                           </ul>
                         ) : (
-                          <p className="text-center text-gray-500 py-4">
-                            Plantel pendiente de cargar
-                          </p>
+                          <p className="text-center text-gray-500 py-4">Plantel pendiente de cargar</p>
                         )}
                       </div>
                     </div>
@@ -1304,7 +1603,6 @@ export default function Liga() {
           </>
         )}
       </main>
-
     </div>
   )
 }
