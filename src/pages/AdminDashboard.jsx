@@ -1504,7 +1504,108 @@ function CircuitSection() {
 function BracketDetail({ bracket, torneo, onDelete, onUpdateMatch }) {
   const [editingMatch, setEditingMatch] = useState(null)
   const [matchResult, setMatchResult] = useState({ ganador: "", resultado: "" })
-  const [viewMode, setViewMode] = useState("tree") // Agregar estado para cambiar entre vista de árbol y lista
+  const [viewMode, setViewMode] = useState("tree")
+
+  const [showZoneMatchModal, setShowZoneMatchModal] = useState(false)
+  const [zoneMatchData, setZoneMatchData] = useState({
+    jugador1: "",
+    jugador2: "",
+    zona: 1,
+    setsJugador1: "",
+    setsJugador2: "",
+    gamesJugador1: "",
+    gamesJugador2: "",
+  })
+  const [tablasPosiciones, setTablasPosiciones] = useState(null)
+
+  useEffect(() => {
+    if (bracket.tipo === "zona_unica" || bracket.tipo === "dos_zonas") {
+      loadTablasPosiciones()
+    }
+  }, [bracket._id, bracket.tipo])
+
+  const loadTablasPosiciones = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/api/circuit/bracket/${bracket._id}/tablas`, {
+        credentials: "include",
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setTablasPosiciones(data)
+      }
+    } catch (error) {
+      console.error("Error al cargar tablas:", error)
+    }
+  }
+
+  const handleCreateZoneMatch = async () => {
+    if (!zoneMatchData.jugador1 || !zoneMatchData.jugador2) {
+      alert("Debes seleccionar ambos jugadores")
+      return
+    }
+    if (zoneMatchData.jugador1 === zoneMatchData.jugador2) {
+      alert("Debes seleccionar dos jugadores diferentes")
+      return
+    }
+    if (!zoneMatchData.setsJugador1 || !zoneMatchData.setsJugador2) {
+      alert("Debes ingresar los sets de ambos jugadores")
+      return
+    }
+    if (!zoneMatchData.gamesJugador1 || !zoneMatchData.gamesJugador2) {
+      alert("Debes ingresar los games de ambos jugadores")
+      return
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/api/circuit/bracket/${bracket._id}/zone-match`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(zoneMatchData),
+      })
+
+      if (response.ok) {
+        alert("Partido cargado exitosamente")
+        setShowZoneMatchModal(false)
+        setZoneMatchData({
+          jugador1: "",
+          jugador2: "",
+          zona: 1,
+          setsJugador1: "",
+          setsJugador2: "",
+          gamesJugador1: "",
+          gamesJugador2: "",
+        })
+        loadTablasPosiciones()
+        window.location.reload()
+      } else {
+        const error = await response.json()
+        alert(`Error: ${error.error}`)
+      }
+    } catch (error) {
+      console.error("Error al cargar partido:", error)
+      alert("Error al cargar el partido")
+    }
+  }
+
+  const handleDeleteZoneMatch = async (matchId) => {
+    if (!confirm("¿Eliminar este partido?")) return
+
+    try {
+      const response = await fetch(`${API_BASE}/api/circuit/bracket/${bracket._id}/zone-match/${matchId}`, {
+        method: "DELETE",
+        credentials: "include",
+      })
+
+      if (response.ok) {
+        alert("Partido eliminado")
+        loadTablasPosiciones()
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error("Error al eliminar partido:", error)
+    }
+  }
 
   const handleEditMatch = (matchIndex, partido) => {
     setEditingMatch(matchIndex)
@@ -1528,6 +1629,13 @@ function BracketDetail({ bracket, torneo, onDelete, onUpdateMatch }) {
     setEditingMatch(null)
     setMatchResult({ ganador: "", resultado: "" })
   }
+
+  const ganadorActual =
+    zoneMatchData.setsJugador1 && zoneMatchData.setsJugador2
+      ? Number(zoneMatchData.setsJugador1) > Number(zoneMatchData.setsJugador2)
+        ? zoneMatchData.jugador1
+        : zoneMatchData.jugador2
+      : null
 
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -1562,6 +1670,238 @@ function BracketDetail({ bracket, torneo, onDelete, onUpdateMatch }) {
       </div>
 
       <div className="p-4">
+        {bracket.tipo === "zona_unica" && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h5 className="font-semibold text-gray-900">Zona Única - Todos contra Todos</h5>
+              <button
+                onClick={() => setShowZoneMatchModal(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm"
+              >
+                + Cargar Partido
+              </button>
+            </div>
+
+            {tablasPosiciones?.zona1 && (
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h6 className="font-medium mb-3">Tabla de Posiciones</h6>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-200">
+                      <tr>
+                        <th className="px-3 py-2 text-left">Pos</th>
+                        <th className="px-3 py-2 text-left">Jugador</th>
+                        <th className="px-3 py-2 text-center">Pts</th>
+                        <th className="px-3 py-2 text-center">PJ</th>
+                        <th className="px-3 py-2 text-center">PG</th>
+                        <th className="px-3 py-2 text-center">PP</th>
+                        <th className="px-3 py-2 text-center">SF</th>
+                        <th className="px-3 py-2 text-center">SC</th>
+                        <th className="px-3 py-2 text-center">DS</th>
+                        <th className="px-3 py-2 text-center">GF</th>
+                        <th className="px-3 py-2 text-center">GC</th>
+                        <th className="px-3 py-2 text-center">DG</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {tablasPosiciones.zona1.map((jugador, idx) => (
+                        <tr key={idx} className={idx < 2 ? "bg-green-50 font-medium" : ""}>
+                          <td className="px-3 py-2">{idx + 1}</td>
+                          <td className="px-3 py-2">{jugador.jugador}</td>
+                          <td className="px-3 py-2 text-center">{jugador.pts}</td>
+                          <td className="px-3 py-2 text-center">{jugador.pj}</td>
+                          <td className="px-3 py-2 text-center">{jugador.pg}</td>
+                          <td className="px-3 py-2 text-center">{jugador.pp}</td>
+                          <td className="px-3 py-2 text-center">{jugador.sf}</td>
+                          <td className="px-3 py-2 text-center">{jugador.sc}</td>
+                          <td className="px-3 py-2 text-center">{jugador.ds}</td>
+                          <td className="px-3 py-2 text-center">{jugador.gf}</td>
+                          <td className="px-3 py-2 text-center">{jugador.gc}</td>
+                          <td className="px-3 py-2 text-center">{jugador.dg}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">Los 2 primeros clasifican a la final</p>
+              </div>
+            )}
+
+            {bracket.partidosZona && bracket.partidosZona.length > 0 && (
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h6 className="font-medium mb-3">Partidos Jugados</h6>
+                <div className="space-y-2">
+                  {bracket.partidosZona.map((partido) => (
+                    <div key={partido._id} className="bg-white p-3 rounded border flex justify-between items-center">
+                      <div>
+                        <p className="font-medium text-sm">
+                          {partido.jugador1} vs {partido.jugador2}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          Sets: {partido.setsJugador1} - {partido.setsJugador2} | Games: {partido.gamesJugador1} -{" "}
+                          {partido.gamesJugador2}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleDeleteZoneMatch(partido._id)}
+                        className="text-red-600 hover:text-red-700 text-sm font-medium"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {bracket.tipo === "dos_zonas" && (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h5 className="font-semibold text-gray-900">Dos Zonas + Final</h5>
+              <button
+                onClick={() => setShowZoneMatchModal(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium text-sm"
+              >
+                + Cargar Partido
+              </button>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* Zona 1 */}
+              {tablasPosiciones?.zona1 && (
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h6 className="font-medium mb-3">Zona 1</h6>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-gray-200">
+                        <tr>
+                          <th className="px-2 py-1 text-left">Pos</th>
+                          <th className="px-2 py-1 text-left">Jugador</th>
+                          <th className="px-2 py-1 text-center">Pts</th>
+                          <th className="px-2 py-1 text-center">DS</th>
+                          <th className="px-2 py-1 text-center">DG</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {tablasPosiciones.zona1.map((jugador, idx) => (
+                          <tr key={idx} className={idx === 0 ? "bg-green-50 font-medium" : ""}>
+                            <td className="px-2 py-1">{idx + 1}</td>
+                            <td className="px-2 py-1">{jugador.jugador}</td>
+                            <td className="px-2 py-1 text-center">{jugador.pts}</td>
+                            <td className="px-2 py-1 text-center">{jugador.ds}</td>
+                            <td className="px-2 py-1 text-center">{jugador.dg}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">El 1° clasifica a la final</p>
+                </div>
+              )}
+
+              {/* Zona 2 */}
+              {tablasPosiciones?.zona2 && (
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h6 className="font-medium mb-3">Zona 2</h6>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-gray-200">
+                        <tr>
+                          <th className="px-2 py-1 text-left">Pos</th>
+                          <th className="px-2 py-1 text-left">Jugador</th>
+                          <th className="px-2 py-1 text-center">Pts</th>
+                          <th className="px-2 py-1 text-center">DS</th>
+                          <th className="px-2 py-1 text-center">DG</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {tablasPosiciones.zona2.map((jugador, idx) => (
+                          <tr key={idx} className={idx === 0 ? "bg-green-50 font-medium" : ""}>
+                            <td className="px-2 py-1">{idx + 1}</td>
+                            <td className="px-2 py-1">{jugador.jugador}</td>
+                            <td className="px-2 py-1 text-center">{jugador.pts}</td>
+                            <td className="px-2 py-1 text-center">{jugador.ds}</td>
+                            <td className="px-2 py-1 text-center">{jugador.dg}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">El 1° clasifica a la final</p>
+                </div>
+              )}
+            </div>
+
+            {bracket.partidosZona && bracket.partidosZona.length > 0 && (
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h6 className="font-medium mb-3">Partidos Jugados</h6>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-700 mb-2">Zona 1</p>
+                    <div className="space-y-2">
+                      {bracket.partidosZona
+                        .filter((p) => p.zona === 1)
+                        .map((partido) => (
+                          <div
+                            key={partido._id}
+                            className="bg-white p-2 rounded border flex justify-between items-center"
+                          >
+                            <div>
+                              <p className="text-xs font-medium">
+                                {partido.jugador1} vs {partido.jugador2}
+                              </p>
+                              <p className="text-xs text-gray-600">
+                                {partido.setsJugador1}-{partido.setsJugador2} ({partido.gamesJugador1}-
+                                {partido.gamesJugador2})
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => handleDeleteZoneMatch(partido._id)}
+                              className="text-red-600 hover:text-red-700 text-xs"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-700 mb-2">Zona 2</p>
+                    <div className="space-y-2">
+                      {bracket.partidosZona
+                        .filter((p) => p.zona === 2)
+                        .map((partido) => (
+                          <div
+                            key={partido._id}
+                            className="bg-white p-2 rounded border flex justify-between items-center"
+                          >
+                            <div>
+                              <p className="text-xs font-medium">
+                                {partido.jugador1} vs {partido.jugador2}
+                              </p>
+                              <p className="text-xs text-gray-600">
+                                {partido.setsJugador1}-{partido.setsJugador2} ({partido.gamesJugador1}-
+                                {partido.gamesJugador2})
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => handleDeleteZoneMatch(partido._id)}
+                              className="text-red-600 hover:text-red-700 text-xs"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {bracket.tipo === "eliminacion_directa" && (
           <div>
             <p className="text-sm text-gray-600 mb-4">
@@ -1679,7 +2019,7 @@ function BracketDetail({ bracket, torneo, onDelete, onUpdateMatch }) {
 
         {bracket.tipo === "zona_unica" && (
           <div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 mb-4">
               <strong>Jugadores:</strong> {bracket.jugadores.join(", ")}
             </p>
             <p className="text-xs text-gray-500 mt-2">Sistema: Todos contra todos</p>
@@ -1688,13 +2028,160 @@ function BracketDetail({ bracket, torneo, onDelete, onUpdateMatch }) {
 
         {bracket.tipo === "dos_zonas" && (
           <div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 mb-4">
               <strong>Jugadores:</strong> {bracket.jugadores.join(", ")}
             </p>
             <p className="text-xs text-gray-500 mt-2">Sistema: Dos zonas con final entre ganadores</p>
           </div>
         )}
       </div>
+
+      {showZoneMatchModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Cargar Partido de Zona</h3>
+            <div className="space-y-3">
+              {bracket.tipo === "dos_zonas" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Zona</label>
+                  <select
+                    value={zoneMatchData.zona}
+                    onChange={(e) => setZoneMatchData({ ...zoneMatchData, zona: Number(e.target.value) })}
+                    className="w-full px-3 py-2 border rounded-lg"
+                  >
+                    <option value={1}>Zona 1</option>
+                    <option value={2}>Zona 2</option>
+                  </select>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Jugador 1</label>
+                <select
+                  value={zoneMatchData.jugador1}
+                  onChange={(e) => setZoneMatchData({ ...zoneMatchData, jugador1: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-lg"
+                >
+                  <option value="">Seleccionar...</option>
+                  {bracket.jugadores.map((j) => (
+                    <option key={j} value={j}>
+                      {j}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Jugador 2</label>
+                <select
+                  value={zoneMatchData.jugador2}
+                  onChange={(e) => setZoneMatchData({ ...zoneMatchData, jugador2: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-lg"
+                >
+                  <option value="">Seleccionar...</option>
+                  {bracket.jugadores.map((j) => (
+                    <option key={j} value={j}>
+                      {j}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Sets {zoneMatchData.jugador1 || "J1"}
+                  </label>
+                  <input
+                    type="number"
+                    value={zoneMatchData.setsJugador1}
+                    onChange={(e) => setZoneMatchData({ ...zoneMatchData, setsJugador1: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-lg"
+                    min="0"
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Sets {zoneMatchData.jugador2 || "J2"}
+                  </label>
+                  <input
+                    type="number"
+                    value={zoneMatchData.setsJugador2}
+                    onChange={(e) => setZoneMatchData({ ...zoneMatchData, setsJugador2: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-lg"
+                    min="0"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Games {zoneMatchData.jugador1 || "J1"}
+                  </label>
+                  <input
+                    type="number"
+                    value={zoneMatchData.gamesJugador1}
+                    onChange={(e) => setZoneMatchData({ ...zoneMatchData, gamesJugador1: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-lg"
+                    min="0"
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Games {zoneMatchData.jugador2 || "J2"}
+                  </label>
+                  <input
+                    type="number"
+                    value={zoneMatchData.gamesJugador2}
+                    onChange={(e) => setZoneMatchData({ ...zoneMatchData, gamesJugador2: e.target.value })}
+                    className="w-full px-3 py-2 border rounded-lg"
+                    min="0"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+
+              {ganadorActual && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <p className="text-sm text-green-800">
+                    <span className="font-semibold">Ganador:</span> {ganadorActual}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={handleCreateZoneMatch}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium"
+              >
+                Guardar
+              </button>
+              <button
+                onClick={() => {
+                  setShowZoneMatchModal(false)
+                  setZoneMatchData({
+                    jugador1: "",
+                    jugador2: "",
+                    zona: 1,
+                    setsJugador1: "",
+                    setsJugador2: "",
+                    gamesJugador1: "",
+                    gamesJugador2: "",
+                  })
+                }}
+                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
