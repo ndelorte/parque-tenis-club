@@ -8,6 +8,7 @@ import adminAuthRoutes from "./routes/adminAuth.js"
 import { requireAdmin } from "./middlewares/requireAdmin.js"
 import newsRoutes from "./routes/news.js"
 import leagueRoutes from "./routes/league.js"
+import circuitRoutes from "./routes/circuit.js"
 
 dotenv.config()
 
@@ -25,6 +26,7 @@ app.use(sessionMiddleware)
 app.use("/admin", adminAuthRoutes)
 app.use("/api/news", newsRoutes)
 app.use("/api/league", leagueRoutes)
+app.use("/api/circuit", circuitRoutes)
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
 
 app.get("/api/health", (req, res) => {
